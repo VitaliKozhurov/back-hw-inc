@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon --inspect dist/index.js",
+    "dev": "nodemon dist/index.js",
     "jest": "jest -i",
     "lint": "eslint --fix .",
     "format": "prettier --write ."

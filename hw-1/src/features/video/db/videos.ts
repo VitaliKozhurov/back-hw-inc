@@ -1,3 +1,5 @@
 import { VideoDTO } from '../types/types';
 
-export const videoDB: VideoDTO[] = [];
+export const videoDB: { videos: VideoDTO[] } = {
+  videos: [],
+};

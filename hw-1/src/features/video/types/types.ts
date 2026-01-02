@@ -19,3 +19,14 @@ export type VideoDTO = {
   publicationDate: string;
   availableResolutions: VideoResolution[];
 };
+
+export type CreateVideoType = {
+  title: string;
+  author: string;
+  availableResolutions: VideoResolution[];
+};
+
+export type ValidationError = {
+  message: string;
+  field: string;
+};
