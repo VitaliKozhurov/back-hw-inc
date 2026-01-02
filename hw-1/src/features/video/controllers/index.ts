@@ -216,6 +216,8 @@ export const deleteVideoById = (
   return res.sendStatus(HTTP_STATUSES.NO_CONTENT);
 };
 
-export const clearVideoDB = () => {
+export const clearVideoDB = (_: Request, res: Response) => {
   videoDB.videos = [];
+
+  return res.sendStatus(HTTP_STATUSES.NO_CONTENT);
 };
