@@ -20,6 +20,8 @@ export type VideoDTO = {
   availableResolutions: VideoResolution[];
 };
 
+export type UpdateVideoType = Omit<VideoDTO, 'id' | 'createdAt'>;
+
 export type CreateVideoType = {
   title: string;
   author: string;
