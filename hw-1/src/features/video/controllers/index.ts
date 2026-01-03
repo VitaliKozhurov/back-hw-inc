@@ -38,7 +38,7 @@ export const createNewVideo = (
     !title ||
     typeof title !== 'string' ||
     title.trim().length === 0 ||
-    title.trim().length > 15
+    title.trim().length > 40
   ) {
     errors.push({
       field: 'title',
@@ -46,7 +46,12 @@ export const createNewVideo = (
     });
   }
 
-  if (!author || typeof author !== 'string' || author.trim().length === 0) {
+  if (
+    !author ||
+    typeof author !== 'string' ||
+    author.trim().length === 0 ||
+    author.trim().length > 20
+  ) {
     errors.push({
       field: 'author',
       message: 'Author is required and should be a string',
@@ -114,7 +119,7 @@ export const updateVideoById = (
     !title ||
     typeof title !== 'string' ||
     title.trim().length === 0 ||
-    title.trim().length > 15
+    title.trim().length > 40
   ) {
     errors.push({
       field: 'title',
@@ -122,7 +127,12 @@ export const updateVideoById = (
     });
   }
 
-  if (!author || typeof author !== 'string' || author.trim().length === 0) {
+  if (
+    !author ||
+    typeof author !== 'string' ||
+    author.trim().length === 0 ||
+    author.trim().length > 20
+  ) {
     errors.push({
       field: 'author',
       message: 'Author is required and should be a string',
