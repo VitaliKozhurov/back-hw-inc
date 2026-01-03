@@ -34,7 +34,12 @@ export const createNewVideo = (
   const { title, author, availableResolutions } = req.body;
   const errors: ValidationError[] = [];
 
-  if (!title || typeof title !== 'string' || title.trim().length === 0) {
+  if (
+    !title ||
+    typeof title !== 'string' ||
+    title.trim().length === 0 ||
+    title.trim().length > 15
+  ) {
     errors.push({
       field: 'title',
       message: 'Title is required and should be a string',
@@ -105,7 +110,12 @@ export const updateVideoById = (
     publicationDate,
   } = req.body;
 
-  if (!title || typeof title !== 'string' || title.trim().length === 0) {
+  if (
+    !title ||
+    typeof title !== 'string' ||
+    title.trim().length === 0 ||
+    title.trim().length > 15
+  ) {
     errors.push({
       field: 'title',
       message: 'Title is required and should be a string',
