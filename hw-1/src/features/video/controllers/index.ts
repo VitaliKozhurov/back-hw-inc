@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
-import { availableResolutionsSet } from '../constants/availableResolutions';
 import { HTTP_STATUSES } from '../constants/httpStatuses';
 import { videoDB } from '../db/videos';
-import { createVideoService } from '../services';
+import { createVideoService } from '../services/createVideoService';
+import {
+  caBeDownloadedValidation,
+  minAgeRestrictionValidation,
+  publicationDateValidation,
+  stringFieldValidation,
+  videoResolutionValidation,
+} from '../services/validation';
 import {
   CreateVideoType,
   UpdateVideoType,
@@ -29,56 +35,31 @@ export const createNewVideo = (
   req: Request<unknown, unknown, CreateVideoType>,
   res: Response,
 ) => {
-  console.log(req.body);
-
   const { title, author, availableResolutions } = req.body;
   const errors: ValidationError[] = [];
 
-  if (
-    !title ||
-    typeof title !== 'string' ||
-    title.trim().length === 0 ||
-    title.trim().length > 40
-  ) {
-    errors.push({
-      field: 'title',
-      message: 'Title is required and should be a string',
-    });
+  const titleValidationResult = stringFieldValidation({
+    field: title,
+    fieldName: 'title',
+    maxLength: 40,
+  });
+  if (titleValidationResult) {
+    errors.push(titleValidationResult);
   }
 
-  if (
-    !author ||
-    typeof author !== 'string' ||
-    author.trim().length === 0 ||
-    author.trim().length > 20
-  ) {
-    errors.push({
-      field: 'author',
-      message: 'Author is required and should be a string',
-    });
+  const authorValidationResult = stringFieldValidation({
+    field: author,
+    fieldName: 'author',
+    maxLength: 20,
+  });
+  if (authorValidationResult) {
+    errors.push(authorValidationResult);
   }
 
-  if (!Array.isArray(availableResolutions)) {
-    errors.push({
-      field: 'availableResolutions',
-      message: 'AvailableResolutions must be array',
-    });
-  } else if (availableResolutions.length === 0) {
-    errors.push({
-      field: 'availableResolutions',
-      message: 'AvailableResolutions cannot be empty',
-    });
-  } else {
-    for (let resolution of availableResolutions) {
-      if (!availableResolutionsSet.has(resolution)) {
-        errors.push({
-          field: 'availableResolutions',
-          message:
-            'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
-        });
-        break;
-      }
-    }
+  const availableResolutionsValidationResult =
+    videoResolutionValidation(availableResolutions);
+  if (availableResolutionsValidationResult) {
+    errors.push(availableResolutionsValidationResult);
   }
 
   if (errors.length > 0) {
@@ -115,86 +96,46 @@ export const updateVideoById = (
     publicationDate,
   } = req.body;
 
-  if (
-    !title ||
-    typeof title !== 'string' ||
-    title.trim().length === 0 ||
-    title.trim().length > 40
-  ) {
-    errors.push({
-      field: 'title',
-      message: 'Title is required and should be a string',
-    });
+  const titleValidationResult = stringFieldValidation({
+    field: title,
+    fieldName: 'title',
+    maxLength: 40,
+  });
+  if (titleValidationResult) {
+    errors.push(titleValidationResult);
   }
 
-  if (
-    !author ||
-    typeof author !== 'string' ||
-    author.trim().length === 0 ||
-    author.trim().length > 20
-  ) {
-    errors.push({
-      field: 'author',
-      message: 'Author is required and should be a string',
-    });
+  const authorValidationResult = stringFieldValidation({
+    field: author,
+    fieldName: 'author',
+    maxLength: 20,
+  });
+  if (authorValidationResult) {
+    errors.push(authorValidationResult);
   }
 
-  if (!Array.isArray(availableResolutions)) {
-    errors.push({
-      field: 'availableResolutions',
-      message: 'AvailableResolutions must be array',
-    });
-  } else if (availableResolutions.length === 0) {
-    errors.push({
-      field: 'availableResolutions',
-      message: 'AvailableResolutions cannot be empty',
-    });
-  } else {
-    for (let resolution of availableResolutions) {
-      if (!availableResolutionsSet.has(resolution)) {
-        errors.push({
-          field: 'availableResolutions',
-          message:
-            'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
-        });
-        break;
-      }
-    }
+  const availableResolutionsValidationResult =
+    videoResolutionValidation(availableResolutions);
+  if (availableResolutionsValidationResult) {
+    errors.push(availableResolutionsValidationResult);
   }
 
-  if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
-    errors.push({
-      field: 'canBeDownloaded',
-      message: 'CanBeDownloaded is required and should be a boolean',
-    });
+  const canBeDownloadedValidationResult =
+    caBeDownloadedValidation(canBeDownloaded);
+  if (canBeDownloadedValidationResult) {
+    errors.push(canBeDownloadedValidationResult);
   }
 
-  if (
-    minAgeRestriction !== null &&
-    (typeof minAgeRestriction !== 'number' ||
-      minAgeRestriction < 1 ||
-      minAgeRestriction > 18)
-  ) {
-    errors.push({
-      field: 'minAgeRestriction',
-      message:
-        'MinAgeRestriction is required and should be a number between 1 and 18',
-    });
+  const minAgeRestrictionValidationResult =
+    minAgeRestrictionValidation(minAgeRestriction);
+  if (minAgeRestrictionValidationResult) {
+    errors.push(minAgeRestrictionValidationResult);
   }
 
-  if (!publicationDate || typeof publicationDate !== 'string') {
-    errors.push({
-      field: 'publicationDate',
-      message: 'PublicationDate is required',
-    });
-  } else if (
-    isNaN(new Date(publicationDate).getTime()) &&
-    new Date(publicationDate).toISOString() !== publicationDate
-  ) {
-    errors.push({
-      field: 'publicationDate',
-      message: 'PublicationDate is invalid',
-    });
+  const publicationDateValidationResult =
+    publicationDateValidation(publicationDate);
+  if (publicationDateValidationResult) {
+    errors.push(publicationDateValidationResult);
   }
 
   if (errors.length > 0) {
