@@ -72,7 +72,9 @@ export const createNewVideo = (
   }
 
   if (errors.length > 0) {
-    return res.status(HTTP_STATUSES.BAD_REQUEST).send(errors);
+    return res
+      .status(HTTP_STATUSES.BAD_REQUEST)
+      .send({ errorsMessages: errors });
   }
 
   const newVideo = createVideoService(req.body);
@@ -166,8 +168,8 @@ export const updateVideoById = (
       message: 'PublicationDate is required',
     });
   } else if (
-    !isNaN(new Date(publicationDate).getTime()) &&
-    new Date(publicationDate).toISOString() === publicationDate
+    isNaN(new Date(publicationDate).getTime()) &&
+    new Date(publicationDate).toISOString() !== publicationDate
   ) {
     errors.push({
       field: 'publicationDate',
@@ -176,7 +178,9 @@ export const updateVideoById = (
   }
 
   if (errors.length > 0) {
-    return res.status(HTTP_STATUSES.BAD_REQUEST).send(errors);
+    return res
+      .status(HTTP_STATUSES.BAD_REQUEST)
+      .send({ errorsMessages: errors });
   }
 
   const updatedVideoDB = videoDB.videos.map((video) => {
