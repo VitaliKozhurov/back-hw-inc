@@ -182,7 +182,7 @@ export const updateVideoById = (
     });
   }
 
-  if (!publicationDate) {
+  if (!publicationDate || typeof publicationDate !== 'string') {
     errors.push({
       field: 'publicationDate',
       message: 'PublicationDate is required',
