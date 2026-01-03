@@ -15,5 +15,7 @@ videoRouter
   .get('/:id', getVideoById)
   .post('/', createNewVideo)
   .put('/:id', updateVideoById)
-  .delete('/:id', deleteVideoById)
-  .delete('/testing/all-data', clearVideoDB);
+  .delete('/:id', deleteVideoById);
+
+export const testingRouter = Router();
+testingRouter.delete('/all-data', clearVideoDB);

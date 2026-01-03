@@ -29,6 +29,8 @@ export const createNewVideo = (
   req: Request<unknown, unknown, CreateVideoType>,
   res: Response,
 ) => {
+  console.log(req.body);
+
   const { title, author, availableResolutions } = req.body;
   const errors: ValidationError[] = [];
 
@@ -51,23 +53,21 @@ export const createNewVideo = (
       field: 'availableResolutions',
       message: 'AvailableResolutions must be array',
     });
-  }
-
-  if (availableResolutions.length === 0) {
+  } else if (availableResolutions.length === 0) {
     errors.push({
       field: 'availableResolutions',
       message: 'AvailableResolutions cannot be empty',
     });
-  }
-
-  for (let resolution of availableResolutions) {
-    if (!availableResolutionsSet.has(resolution)) {
-      errors.push({
-        field: 'availableResolutions',
-        message:
-          'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
-      });
-      break;
+  } else {
+    for (let resolution of availableResolutions) {
+      if (!availableResolutionsSet.has(resolution)) {
+        errors.push({
+          field: 'availableResolutions',
+          message:
+            'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
+        });
+        break;
+      }
     }
   }
 
@@ -122,23 +122,21 @@ export const updateVideoById = (
       field: 'availableResolutions',
       message: 'AvailableResolutions must be array',
     });
-  }
-
-  if (availableResolutions.length === 0) {
+  } else if (availableResolutions.length === 0) {
     errors.push({
       field: 'availableResolutions',
       message: 'AvailableResolutions cannot be empty',
     });
-  }
-
-  for (let resolution of availableResolutions) {
-    if (!availableResolutionsSet.has(resolution)) {
-      errors.push({
-        field: 'availableResolutions',
-        message:
-          'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
-      });
-      break;
+  } else {
+    for (let resolution of availableResolutions) {
+      if (!availableResolutionsSet.has(resolution)) {
+        errors.push({
+          field: 'availableResolutions',
+          message:
+            'AvailableResolutions must be one of P144, P240, P360, P480, P720, P1080, P1440, P2160',
+        });
+        break;
+      }
     }
   }
 
